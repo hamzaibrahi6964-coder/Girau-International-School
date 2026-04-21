@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard | Girau International School</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <section class="page-hero small-hero">
+    <div class="container">
+      <span class="section-tag">Teacher Dashboard</span>
+      <h1>Welcome, Teacher</h1>
+      <p id="welcomeText">Loading your profile...</p>
+      <button id="logoutBtn" class="btn primary-btn" style="margin-top:20px;">Logout</button>
+    </div>
+  </section>
+
+  <script>
+    const savedUser = JSON.parse(localStorage.getItem("girauUser"));
+    const welcomeText = document.getElementById("welcomeText");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (!savedUser || savedUser.role !== "teacher") {
+      window.location.href = "portal.html";
+    } else {
+      welcomeText.textContent = `Welcome ${savedUser.fullName || "Teacher"} (${savedUser.email})`;
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("girauUser");
+      window.location.href = "portal.html";
+    });
+  </script>
+</body>
+</html>
