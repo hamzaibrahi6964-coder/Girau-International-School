@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal | Girau International School</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="portal-page-body">
+
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="girau logo.png" alt="Girau Logo" class="logo-img">
+        <div>
+          <h2>Girau International School</h2>
+          <p>Learn, Live, Achieve</p>
+        </div>
+      </a>
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="academics.html">Academics</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="contact.html">Contact</a>
+        <a href="portal.html" class="portal-btn active">Portal</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="academics.html">Academics</a>
+      <a href="admissions.html">Admissions</a>
+      <a href="contact.html">Contact</a>
+      <a href="portal.html" class="portal-btn mobile-portal">Portal</a>
+    </div>
+  </header>
+
+  <section class="portal-section">
+    <div class="container portal-layout">
+      <div class="portal-left">
+        <span class="section-tag">School Portal</span>
+        <h1>Digital Access for the Entire School Community</h1>
+        <p>
+          Secure login access for parents, teachers, and school administration.
+          This premium portal structure gives the school a modern digital presence.
+        </p>
+
+        <div class="portal-benefits">
+          <div><i class="fas fa-user-shield"></i> Secure Access</div>
+          <div><i class="fas fa-school-circle-check"></i> Organized Management</div>
+          <div><i class="fas fa-users-viewfinder"></i> Parent Engagement</div>
+        </div>
+      </div>
+
+      <div class="portal-right">
+        <div class="portal-login-box">
+          <h2>Portal Login</h2>
+          <p>Select your role and enter your details.</p>
+
+          <form id="portalForm">
+            <select id="role" required>
+              <option value="">Select Role</option>
+              <option value="parent">Parent</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <input type="text" id="email" placeholder="Email or Staff ID" required />
+            <input type="password" id="password" placeholder="Password" required />
+
+            <button type="submit" class="btn primary-btn full-btn">Login</button>
+          </form>
+
+          <p id="portalMsg" class="portal-msg"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Girau International School</h3>
+        <p>Learn, Live, Achieve</p>
+      </div>
+      <div>
+        <h4>Quick Access</h4>
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileNav = document.getElementById("mobileNav");
+    menuBtn.addEventListener("click", () => mobileNav.classList.toggle("show"));
+
+    const portalForm = document.getElementById("portalForm");
+    const portalMsg = document.getElementById("portalMsg");
+
+    portalForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const role = document.getElementById("role").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!role || !email || !password) {
+        portalMsg.textContent = "Please fill in all portal login details.";
+        portalMsg.style.color = "red";
+        return;
+      }
+
+      portalMsg.textContent = "Portal connected successfully. Backend login can be added next.";
+      portalMsg.style.color = "green";
+    });
+  </script>
+</body>
+</html>
