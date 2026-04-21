@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Girau International School</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="girau logo.png" alt="Girau Logo" class="logo-img">
+        <div>
+          <h2>Girau International School</h2>
+          <p>Learn, Live, Achieve</p>
+        </div>
+      </a>
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="academics.html">Academics</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="contact.html" class="active">Contact</a>
+        <a href="portal.html" class="portal-btn">Portal</a>
+      </nav>
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="academics.html">Academics</a>
+      <a href="admissions.html">Admissions</a>
+      <a href="contact.html">Contact</a>
+      <a href="portal.html" class="portal-btn mobile-portal">Portal</a>
+    </div>
+  </header>
+
+  <section class="page-hero small-hero">
+    <div class="container">
+      <span class="section-tag">Contact Us</span>
+      <h1>Let’s Talk</h1>
+      <p>Reach out to Girau International School for admissions, enquiries, and school information.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split-grid">
+      <div class="contact-card">
+        <h2>School Contact Information</h2>
+        <p><i class="fas fa-location-dot"></i> Plot 283621 Road B, Beside MPH Estate Millennium City, Kaduna, Kaduna, Nigeria, 800104.</p>
+        <p><i class="fas fa-phone"></i> 07067764310</p>
+        <p><i class="fas fa-phone"></i> 08126814704</p>
+        <p><i class="fas fa-envelope"></i> girauinternationalschool@gmail.com</p>
+
+        <div class="socials large-socials">
+          <a href="https://instagram.com/girau_intl_school" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://facebook.com/girau_intl_school" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <div class="cta-box form-style">
+        <h2>Send a Message</h2>
+        <form>
+          <div class="form-grid">
+            <input type="text" placeholder="Full Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <input type="text" placeholder="Phone Number" required>
+            <input type="text" placeholder="Subject" required>
+          </div>
+          <textarea placeholder="Write your message here..." required></textarea>
+          <button type="submit" class="btn primary-btn">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Girau International School</h3>
+        <p>Learn, Live, Achieve</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileNav = document.getElementById("mobileNav");
+    menuBtn.addEventListener("click", () => mobileNav.classList.toggle("show"));
+  </script>
+</body>
+</html>
