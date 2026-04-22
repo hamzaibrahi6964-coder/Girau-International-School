@@ -117,142 +117,139 @@
       </div>
     </div>
   </footer>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-  <script>
-    const menuBtn = document.getElementById("menuBtn");
-    const mobileNav = document.getElementById("mobileNav");
-    menuBtn.addEventListener("click", () => mobileNav.classList.toggle("show"));
-  </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyABNjwmTymu1jQ9hUCoh_iOebu3YoZEfqY",
+    authDomain: "girau-intl-school-8120a.firebaseapp.com",
+    projectId: "girau-intl-school-8120a",
+    storageBucket: "girau-intl-school-8120a.firebasestorage.app",
+    messagingSenderId: "964102938790",
+    appId: "1:964102938790:web:30895aeab717e558b2d467"
+  };
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      getDoc
-    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    // =========================
-    // PASTE YOUR FIREBASE CONFIG HERE
-    // =========================
-    const firebaseConfig = {
-      apiKey: "AIzaSyABNjwmTymu1jQ9hUCoh_iOebu3YoZEfqY",
-      authDomain: ""girau-intl-school-8120a.firebaseapp.com",
-      projectId: "girau-intl-school-8120a",
-      storageBucket: "girau-intl-school-8120a.firebasestorage.app",
-      messagingSenderId: "964102938790",
-      appId: "1:964102938790:web:30895aeab717e558b2d467"
-    };
+  const showLogin = document.getElementById("showLogin");
+  const showSignup = document.getElementById("showSignup");
+  const loginForm = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  showLogin.addEventListener("click", () => {
+    showLogin.classList.add("active");
+    showSignup.classList.remove("active");
+    loginForm.classList.remove("hidden-form");
+    signupForm.classList.add("hidden-form");
+  });
 
-    // Tabs
-    const showLogin = document.getElementById("showLogin");
-    const showSignup = document.getElementById("showSignup");
-    const loginForm = document.getElementById("loginForm");
-    const signupForm = document.getElementById("signupForm");
+  showSignup.addEventListener("click", () => {
+    showSignup.classList.add("active");
+    showLogin.classList.remove("active");
+    signupForm.classList.remove("hidden-form");
+    loginForm.classList.add("hidden-form");
+  });
 
-    showLogin.addEventListener("click", () => {
-      showLogin.classList.add("active");
-      showSignup.classList.remove("active");
-      loginForm.classList.remove("hidden-form");
-      signupForm.classList.add("hidden-form");
-    });
+  const signupMsg = document.getElementById("signupMsg");
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    showSignup.addEventListener("click", () => {
-      showSignup.classList.add("active");
-      showLogin.classList.remove("active");
-      signupForm.classList.remove("hidden-form");
-      loginForm.classList.add("hidden-form");
-    });
+    const fullName = document.getElementById("signupName").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const phone = document.getElementById("signupPhone").value.trim();
+    const studentId = document.getElementById("studentId").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
 
-    // SIGN UP - PARENT ONLY
-    const signupMsg = document.getElementById("signupMsg");
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    signupMsg.textContent = "Creating account...";
+    signupMsg.style.color = "#123f7a";
 
-      const fullName = document.getElementById("signupName").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
-      const phone = document.getElementById("signupPhone").value.trim();
-      const studentId = document.getElementById("studentId").value.trim();
-      const password = document.getElementById("signupPassword").value.trim();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-      signupMsg.textContent = "Creating account...";
-      signupMsg.style.color = "#123f7a";
+      await setDoc(doc(db, "users", user.uid), {
+        fullName,
+        email,
+        phone,
+        studentId,
+        role: "parent",
+        createdAt: new Date().toISOString()
+      });
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+      signupMsg.textContent = "Parent account created successfully.";
+      signupMsg.style.color = "green";
+      signupForm.reset();
+    } catch (error) {
+      signupMsg.textContent = error.code + " - " + error.message;
+      signupMsg.style.color = "red";
+      console.error("SIGNUP ERROR:", error);
+    }
+  });
 
-        await setDoc(doc(db, "users", user.uid), {
-          fullName,
-          email,
-          phone,
-          studentId,
-          role: "parent",
-          createdAt: new Date().toISOString()
-        });
+  const loginMsg = document.getElementById("loginMsg");
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        signupMsg.textContent = "Parent account created successfully. You can now log in.";
-        signupMsg.style.color = "green";
-        signupForm.reset();
-      } catch (error) {
-        signupMsg.textContent = error.message;
-        signupMsg.style.color = "red";
+    const selectedRole = document.getElementById("loginRole").value;
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    loginMsg.textContent = "Logging in...";
+    loginMsg.style.color = "#123f7a";
+
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log("SIGNED IN UID:", user.uid);
+
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        loginMsg.textContent = "No user profile found in Firestore for this account.";
+        loginMsg.style.color = "red";
+        return;
       }
-    });
 
-    // LOGIN
-    const loginMsg = document.getElementById("loginMsg");
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+      const userData = userSnap.data();
+      console.log("USER DATA:", userData);
 
-      const selectedRole = document.getElementById("loginRole").value;
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+      if (userData.role !== selectedRole) {
+        loginMsg.textContent = "Selected role does not match this account. Database role is: " + userData.role;
+        loginMsg.style.color = "red";
+        return;
+      }
 
-      loginMsg.textContent = "Logging in...";
-      loginMsg.style.color = "#123f7a";
+      localStorage.setItem("girauUser", JSON.stringify({
+        uid: user.uid,
+        fullName: userData.fullName || "",
+        email: userData.email || "",
+        phone: userData.phone || "",
+        role: userData.role || ""
+      }));
 
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+      loginMsg.textContent = "Login successful. Redirecting...";
+      loginMsg.style.color = "green";
 
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          loginMsg.textContent = "No user profile found in database.";
-          loginMsg.style.color = "red";
-          return;
-        }
-
-        const userData = userSnap.data();
-
-        if (userData.role !== selectedRole) {
-          loginMsg.textContent = "Selected role does not match this account.";
-          loginMsg.style.color = "red";
-          return;
-        }
-
-        localStorage.setItem("girauUser", JSON.stringify({
-          uid: user.uid,
-          fullName: userData.fullName || "",
-          email: userData.email || "",
-          phone: userData.phone || "",
-          role: userData.role || ""
-        }));
-
-        loginMsg.textContent = "Login successful.";
-
+      setTimeout(() => {
         if (userData.role === "parent") {
           window.location.href = "parent-dashboard.html";
         } else if (userData.role === "teacher") {
@@ -263,12 +260,14 @@
           loginMsg.textContent = "Unknown role detected.";
           loginMsg.style.color = "red";
         }
+      }, 800);
 
-      } catch (error) {
-        loginMsg.textContent = error.message;
-        loginMsg.style.color = "red";
-      }
-    });
-  </script>
+    } catch (error) {
+      loginMsg.textContent = error.code + " - " + error.message;
+      loginMsg.style.color = "red";
+      console.error("LOGIN ERROR:", error);
+    }
+  });
+</script>
 </body>
 </html>
