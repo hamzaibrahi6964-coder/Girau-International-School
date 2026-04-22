@@ -5,32 +5,273 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teacher Dashboard | Girau International School</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
-  <section class="page-hero small-hero">
-    <div class="container">
-      <span class="section-tag">Teacher Dashboard</span>
-      <h1>Welcome, Teacher</h1>
-      <p id="welcomeText">Loading your profile...</p>
-      <button id="logoutBtn" class="btn primary-btn" style="margin-top:20px;">Logout</button>
+<body class="teacher-body">
+
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="girau logo.png" alt="Girau Logo" class="logo-img">
+        <div>
+          <h2>Girau International School</h2>
+          <p>Learn, Live, Achieve</p>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="portal.html" class="portal-btn active">Portal</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="portal.html" class="portal-btn mobile-portal">Portal</a>
+    </div>
+  </header>
+
+  <section class="teacher-hero">
+    <div class="container teacher-hero-grid">
+      <div>
+        <span class="section-tag">Teacher Dashboard</span>
+        <h1>Welcome, Teacher</h1>
+        <p id="welcomeText">Loading your profile...</p>
+      </div>
+
+      <div>
+        <button id="logoutBtn" class="btn primary-btn">Logout</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container teacher-layout">
+
+      <div class="teacher-card">
+        <h2>Upload Student Result</h2>
+        <p class="card-note">Enter the student details and save the subject result.</p>
+
+        <form id="resultForm">
+          <div class="form-grid">
+            <input type="text" id="studentId" placeholder="Student ID" required />
+            <input type="text" id="studentName" placeholder="Student Full Name" required />
+            <input type="text" id="studentClass" placeholder="Class" required />
+            <input type="text" id="subject" placeholder="Subject" required />
+            <input type="number" id="score" placeholder="Score" required min="0" max="100" />
+            <input type="text" id="term" placeholder="Term e.g. First Term" required />
+          </div>
+
+          <button type="submit" class="btn primary-btn full-btn">Upload Result</button>
+          <p id="resultMsg" class="portal-msg"></p>
+        </form>
+      </div>
+
+      <div class="teacher-card">
+        <h2>Uploaded Results</h2>
+        <p class="card-note">These are results uploaded with this teacher account.</p>
+        <div id="resultsList" class="results-list">
+          <p>Loading results...</p>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <script>
-    const savedUser = JSON.parse(localStorage.getItem("girauUser"));
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileNav = document.getElementById("mobileNav");
+
+    menuBtn.addEventListener("click", () => {
+      mobileNav.classList.toggle("show");
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      where,
+      getDocs,
+      serverTimestamp,
+      doc,
+      getDoc,
+      orderBy
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyABNjwmTymu1jQ9hUCoh_iOebu3YoZEfqY",
+      authDomain: "girau-intl-school-8120a.firebaseapp.com",
+      projectId: "girau-intl-school-8120a",
+      storageBucket: "girau-intl-school-8120a.firebasestorage.app",
+      messagingSenderId: "964102938790",
+      appId: "1:964102938790:web:30895aeab717e558b2d467"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
     const welcomeText = document.getElementById("welcomeText");
     const logoutBtn = document.getElementById("logoutBtn");
+    const resultForm = document.getElementById("resultForm");
+    const resultMsg = document.getElementById("resultMsg");
+    const resultsList = document.getElementById("resultsList");
 
-    if (!savedUser || savedUser.role !== "teacher") {
-      window.location.href = "portal.html";
-    } else {
-      welcomeText.textContent = `Welcome ${savedUser.fullName || "Teacher"} (${savedUser.email})`;
-    }
+    let currentUser = null;
+    let currentTeacherProfile = null;
 
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("girauUser");
-      window.location.href = "portal.html";
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "portal.html";
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          alert("No teacher profile found.");
+          window.location.href = "portal.html";
+          return;
+        }
+
+        const userData = userSnap.data();
+
+        if (userData.role !== "teacher") {
+          alert("Access denied. Teacher account required.");
+          window.location.href = "portal.html";
+          return;
+        }
+
+        currentUser = user;
+        currentTeacherProfile = userData;
+
+        welcomeText.textContent = `Welcome ${userData.fullName || "Teacher"} (${userData.email || user.email})`;
+
+        await loadTeacherResults();
+
+      } catch (error) {
+        console.error("TEACHER DASHBOARD ERROR:", error);
+        alert("Error loading teacher dashboard: " + error.message);
+      }
     });
+
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        localStorage.removeItem("girauUser");
+        await signOut(auth);
+        window.location.href = "portal.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    resultForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!currentUser) {
+        resultMsg.textContent = "Teacher account not loaded yet.";
+        resultMsg.style.color = "red";
+        return;
+      }
+
+      const studentId = document.getElementById("studentId").value.trim();
+      const studentName = document.getElementById("studentName").value.trim();
+      const studentClass = document.getElementById("studentClass").value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const score = document.getElementById("score").value.trim();
+      const term = document.getElementById("term").value.trim();
+
+      resultMsg.textContent = "Uploading result...";
+      resultMsg.style.color = "#123f7a";
+
+      try {
+        await addDoc(collection(db, "results"), {
+          studentId,
+          studentName,
+          studentClass,
+          subject,
+          score: Number(score),
+          term,
+          teacherEmail: currentUser.email,
+          teacherName: currentTeacherProfile?.fullName || "Teacher",
+          createdAt: serverTimestamp()
+        });
+
+        resultMsg.textContent = "Result uploaded successfully.";
+        resultMsg.style.color = "green";
+
+        resultForm.reset();
+        await loadTeacherResults();
+
+      } catch (error) {
+        console.error("UPLOAD RESULT ERROR:", error);
+        resultMsg.textContent = error.message;
+        resultMsg.style.color = "red";
+      }
+    });
+
+    async function loadTeacherResults() {
+      resultsList.innerHTML = "<p>Loading results...</p>";
+
+      try {
+        const q = query(
+          collection(db, "results"),
+          where("teacherEmail", "==", currentUser.email)
+        );
+
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          resultsList.innerHTML = "<p>No results uploaded yet.</p>";
+          return;
+        }
+
+        const results = [];
+        snap.forEach((docItem) => {
+          results.push(docItem.data());
+        });
+
+        results.sort((a, b) => {
+          const aName = (a.studentName || "").toLowerCase();
+          const bName = (b.studentName || "").toLowerCase();
+          return aName.localeCompare(bName);
+        });
+
+        resultsList.innerHTML = "";
+
+        results.forEach((r) => {
+          resultsList.innerHTML += `
+            <div class="result-item">
+              <h3>${r.studentName || ""}</h3>
+              <p><strong>Student ID:</strong> ${r.studentId || ""}</p>
+              <p><strong>Class:</strong> ${r.studentClass || ""}</p>
+              <p><strong>Subject:</strong> ${r.subject || ""}</p>
+              <p><strong>Score:</strong> ${r.score ?? ""}</p>
+              <p><strong>Term:</strong> ${r.term || ""}</p>
+            </div>
+          `;
+        });
+
+      } catch (error) {
+        console.error("LOAD RESULTS ERROR:", error);
+        resultsList.innerHTML = "<p>Failed to load results.</p>";
+      }
+    }
   </script>
 </body>
 </html>
