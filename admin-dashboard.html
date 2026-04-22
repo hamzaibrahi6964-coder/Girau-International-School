@@ -5,32 +5,474 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard | Girau International School</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
-  <section class="page-hero small-hero">
-    <div class="container">
-      <span class="section-tag">Admin Dashboard</span>
-      <h1>Welcome, Administrator</h1>
-      <p id="welcomeText">Loading your profile...</p>
-      <button id="logoutBtn" class="btn primary-btn" style="margin-top:20px;">Logout</button>
+<body class="admin-body">
+
+  <header class="topbar">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand">
+        <img src="girau logo.png" alt="Girau Logo" class="logo-img">
+        <div>
+          <h2>Girau International School</h2>
+          <p>Learn, Live, Achieve</p>
+        </div>
+      </a>
+
+      <nav class="desktop-nav">
+        <a href="index.html">Home</a>
+        <a href="portal.html" class="portal-btn active">Portal</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="index.html">Home</a>
+      <a href="portal.html" class="portal-btn mobile-portal">Portal</a>
+    </div>
+  </header>
+
+  <section class="admin-hero">
+    <div class="container admin-hero-grid">
+      <div>
+        <span class="section-tag">Admin Dashboard</span>
+        <h1>School Management Panel</h1>
+        <p id="adminWelcome">Loading administrator profile...</p>
+      </div>
+
+      <div class="admin-top-actions">
+        <button id="logoutBtn" class="btn primary-btn">Logout</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section admin-main">
+    <div class="container admin-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="admin-sidebar">
+        <button class="admin-nav-btn active" data-tab="overviewTab">Overview</button>
+        <button class="admin-nav-btn" data-tab="teachersTab">Teachers</button>
+        <button class="admin-nav-btn" data-tab="studentsTab">Students</button>
+        <button class="admin-nav-btn" data-tab="usersTab">Users</button>
+      </aside>
+
+      <!-- CONTENT -->
+      <div class="admin-content">
+
+        <!-- OVERVIEW -->
+        <div class="admin-tab active" id="overviewTab">
+          <div class="dashboard-cards">
+            <div class="dashboard-card">
+              <h3>Total Users</h3>
+              <p id="totalUsers">0</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>Total Teachers</h3>
+              <p id="totalTeachers">0</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>Total Students</h3>
+              <p id="totalStudents">0</p>
+            </div>
+          </div>
+
+          <div class="admin-panel">
+            <h2>Welcome to Admin Control</h2>
+            <p>
+              From here, the school administrator can manage teachers, students,
+              and view registered portal users.
+            </p>
+          </div>
+        </div>
+
+        <!-- TEACHERS -->
+        <div class="admin-tab" id="teachersTab">
+          <div class="admin-panel">
+            <h2>Add Teacher</h2>
+            <form id="teacherForm">
+              <div class="form-grid">
+                <input type="text" id="teacherName" placeholder="Teacher Full Name" required>
+                <input type="email" id="teacherEmail" placeholder="Teacher Email" required>
+                <input type="text" id="teacherPhone" placeholder="Phone Number" required>
+                <input type="text" id="teacherSubject" placeholder="Subject / Department" required>
+              </div>
+              <button type="submit" class="btn primary-btn">Save Teacher</button>
+              <p id="teacherMsg" class="portal-msg"></p>
+            </form>
+          </div>
+
+          <div class="admin-panel">
+            <h2>Teachers List</h2>
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Subject</th>
+                  </tr>
+                </thead>
+                <tbody id="teachersList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div class="admin-tab" id="studentsTab">
+          <div class="admin-panel">
+            <h2>Add Student</h2>
+            <form id="studentForm">
+              <div class="form-grid">
+                <input type="text" id="studentName" placeholder="Student Full Name" required>
+                <input type="text" id="studentClass" placeholder="Class" required>
+                <input type="text" id="studentParentName" placeholder="Parent Name" required>
+                <input type="text" id="studentParentPhone" placeholder="Parent Phone" required>
+                <input type="text" id="studentParentEmail" placeholder="Parent Email">
+                <input type="text" id="studentIdNumber" placeholder="Student ID" required>
+              </div>
+              <button type="submit" class="btn primary-btn">Save Student</button>
+              <p id="studentMsg" class="portal-msg"></p>
+            </form>
+          </div>
+
+          <div class="admin-panel">
+            <h2>Students List</h2>
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Parent</th>
+                    <th>Phone</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="admin-tab" id="usersTab">
+          <div class="admin-panel">
+            <h2>Registered Users</h2>
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="usersList"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
   <script>
-    const savedUser = JSON.parse(localStorage.getItem("girauUser"));
-    const welcomeText = document.getElementById("welcomeText");
+    const menuBtn = document.getElementById("menuBtn");
+    const mobileNav = document.getElementById("mobileNav");
+    menuBtn.addEventListener("click", () => mobileNav.classList.toggle("show"));
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "PASTE-YOUR-API-KEY",
+      authDomain: "PASTE-YOUR-AUTH-DOMAIN",
+      projectId: "PASTE-YOUR-PROJECT-ID",
+      storageBucket: "PASTE-YOUR-STORAGE-BUCKET",
+      messagingSenderId: "PASTE-YOUR-MESSAGING-SENDER-ID",
+      appId: "PASTE-YOUR-APP-ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const adminWelcome = document.getElementById("adminWelcome");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    if (!savedUser || savedUser.role !== "admin") {
-      window.location.href = "portal.html";
-    } else {
-      welcomeText.textContent = `Welcome ${savedUser.fullName || "Admin"} (${savedUser.email})`;
+    const totalUsers = document.getElementById("totalUsers");
+    const totalTeachers = document.getElementById("totalTeachers");
+    const totalStudents = document.getElementById("totalStudents");
+
+    const teacherForm = document.getElementById("teacherForm");
+    const teacherMsg = document.getElementById("teacherMsg");
+    const teachersList = document.getElementById("teachersList");
+
+    const studentForm = document.getElementById("studentForm");
+    const studentMsg = document.getElementById("studentMsg");
+    const studentsList = document.getElementById("studentsList");
+
+    const usersList = document.getElementById("usersList");
+
+    // Tabs
+    const navButtons = document.querySelectorAll(".admin-nav-btn");
+    const tabs = document.querySelectorAll(".admin-tab");
+
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach(b => b.classList.remove("active"));
+        tabs.forEach(tab => tab.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // Auth check
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "portal.html";
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          alert("No admin profile found.");
+          window.location.href = "portal.html";
+          return;
+        }
+
+        const userData = userSnap.data();
+
+        if (userData.role !== "admin") {
+          alert("Access denied. Admin only.");
+          window.location.href = "portal.html";
+          return;
+        }
+
+        adminWelcome.textContent = `Welcome ${userData.fullName || "Administrator"} (${userData.email || ""})`;
+
+        await loadDashboardCounts();
+        await loadTeachers();
+        await loadStudents();
+        await loadUsers();
+
+      } catch (error) {
+        console.error(error);
+        alert("Error loading admin dashboard.");
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        localStorage.removeItem("girauUser");
+        await signOut(auth);
+        window.location.href = "portal.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    // Add Teacher
+    teacherForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById("teacherName").value.trim();
+      const email = document.getElementById("teacherEmail").value.trim();
+      const phone = document.getElementById("teacherPhone").value.trim();
+      const subject = document.getElementById("teacherSubject").value.trim();
+
+      teacherMsg.textContent = "Saving teacher...";
+      teacherMsg.style.color = "#123f7a";
+
+      try {
+        await addDoc(collection(db, "teachers"), {
+          fullName,
+          email,
+          phone,
+          subject,
+          createdAt: serverTimestamp()
+        });
+
+        teacherMsg.textContent = "Teacher saved successfully.";
+        teacherMsg.style.color = "green";
+        teacherForm.reset();
+
+        await loadTeachers();
+        await loadDashboardCounts();
+      } catch (error) {
+        teacherMsg.textContent = error.message;
+        teacherMsg.style.color = "red";
+      }
+    });
+
+    // Add Student
+    studentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById("studentName").value.trim();
+      const studentClass = document.getElementById("studentClass").value.trim();
+      const parentName = document.getElementById("studentParentName").value.trim();
+      const parentPhone = document.getElementById("studentParentPhone").value.trim();
+      const parentEmail = document.getElementById("studentParentEmail").value.trim();
+      const studentId = document.getElementById("studentIdNumber").value.trim();
+
+      studentMsg.textContent = "Saving student...";
+      studentMsg.style.color = "#123f7a";
+
+      try {
+        await addDoc(collection(db, "students"), {
+          fullName,
+          studentClass,
+          parentName,
+          parentPhone,
+          parentEmail,
+          studentId,
+          createdAt: serverTimestamp()
+        });
+
+        studentMsg.textContent = "Student saved successfully.";
+        studentMsg.style.color = "green";
+        studentForm.reset();
+
+        await loadStudents();
+        await loadDashboardCounts();
+      } catch (error) {
+        studentMsg.textContent = error.message;
+        studentMsg.style.color = "red";
+      }
+    });
+
+    async function loadDashboardCounts() {
+      const usersSnap = await getDocs(collection(db, "users"));
+      const teachersSnap = await getDocs(collection(db, "teachers"));
+      const studentsSnap = await getDocs(collection(db, "students"));
+
+      totalUsers.textContent = usersSnap.size;
+      totalTeachers.textContent = teachersSnap.size;
+      totalStudents.textContent = studentsSnap.size;
     }
 
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("girauUser");
-      window.location.href = "portal.html";
-    });
+    async function loadTeachers() {
+      teachersList.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
+
+      try {
+        const q = query(collection(db, "teachers"), orderBy("fullName"));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          teachersList.innerHTML = "<tr><td colspan='4'>No teachers added yet.</td></tr>";
+          return;
+        }
+
+        teachersList.innerHTML = "";
+
+        snap.forEach((docItem) => {
+          const teacher = docItem.data();
+
+          teachersList.innerHTML += `
+            <tr>
+              <td>${teacher.fullName || ""}</td>
+              <td>${teacher.email || ""}</td>
+              <td>${teacher.phone || ""}</td>
+              <td>${teacher.subject || ""}</td>
+            </tr>
+          `;
+        });
+      } catch (error) {
+        teachersList.innerHTML = "<tr><td colspan='4'>Failed to load teachers.</td></tr>";
+      }
+    }
+
+    async function loadStudents() {
+      studentsList.innerHTML = "<tr><td colspan='5'>Loading...</td></tr>";
+
+      try {
+        const q = query(collection(db, "students"), orderBy("fullName"));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          studentsList.innerHTML = "<tr><td colspan='5'>No students added yet.</td></tr>";
+          return;
+        }
+
+        studentsList.innerHTML = "";
+
+        snap.forEach((docItem) => {
+          const student = docItem.data();
+
+          studentsList.innerHTML += `
+            <tr>
+              <td>${student.fullName || ""}</td>
+              <td>${student.studentClass || ""}</td>
+              <td>${student.parentName || ""}</td>
+              <td>${student.parentPhone || ""}</td>
+              <td>${student.studentId || ""}</td>
+            </tr>
+          `;
+        });
+      } catch (error) {
+        studentsList.innerHTML = "<tr><td colspan='5'>Failed to load students.</td></tr>";
+      }
+    }
+
+    async function loadUsers() {
+      usersList.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
+
+      try {
+        const q = query(collection(db, "users"), orderBy("fullName"));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          usersList.innerHTML = "<tr><td colspan='4'>No users found.</td></tr>";
+          return;
+        }
+
+        usersList.innerHTML = "";
+
+        snap.forEach((docItem) => {
+          const user = docItem.data();
+
+          usersList.innerHTML += `
+            <tr>
+              <td>${user.fullName || ""}</td>
+              <td>${user.email || ""}</td>
+              <td>${user.phone || ""}</td>
+              <td>${user.role || ""}</td>
+            </tr>
+          `;
+        });
+      } catch (error) {
+        usersList.innerHTML = "<tr><td colspan='4'>Failed to load users.</td></tr>";
+      }
+    }
   </script>
 </body>
 </html>
