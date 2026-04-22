@@ -631,3 +631,34 @@ img {
     font-size: 1.4rem;
   }
 }
+
+.portal-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  border: none;
+  background: #e7edf7;
+  color: #123f7a;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab-btn.active {
+  background: var(--gold);
+  color: #111;
+}
+
+.portal-form-box {
+  display: block;
+}
+
+.hidden-form {
+  display: none;
+}
