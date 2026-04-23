@@ -914,3 +914,76 @@ img {
     padding: 20px;
   }
 }
+
+.parent-body {
+  background: #f5f8fc;
+}
+
+.parent-hero {
+  background: linear-gradient(135deg, #0c2d57, #174b8a);
+  color: white;
+  padding: 70px 0 50px;
+}
+
+.parent-hero-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.parent-hero h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  margin-bottom: 12px;
+}
+
+.parent-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.parent-card {
+  background: white;
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+
+.parent-card h2 {
+  margin-bottom: 10px;
+  color: var(--primary);
+}
+
+.student-box,
+.result-box {
+  background: #f8fbff;
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 16px;
+}
+
+.student-box h3,
+.result-box h3 {
+  color: var(--primary);
+  margin-bottom: 10px;
+}
+
+@media (max-width: 992px) {
+  .parent-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .parent-hero-grid {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .parent-card {
+    padding: 20px;
+  }
+}
